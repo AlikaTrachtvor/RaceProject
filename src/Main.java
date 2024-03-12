@@ -1,5 +1,21 @@
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
+class RunnerIDInt extends RunnerID{
+    private int id;
+    public RunnerIDInt(int id){
+        super();
+        this.id = id;
+    }
+    @Override
+    public boolean isSmaller(RunnerID other) {
+        return this.id < ((RunnerIDInt)other).id;
+    }
+
+    @Override
+    public String toString() {
+        return String.valueOf(this.id);
+    }
+
+
+}
 public class Main {
     public static void main(String[] args) {
         // Press Alt+Enter with your caret at the highlighted text to see how

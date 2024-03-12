@@ -1,16 +1,21 @@
-public class TreeRunner extends Tree2_3<RunnerID>{
+public class TreeRunner extends Tree2_3<RunnerID, Float>{
 
     @Override
-    public TreeNode2_3 Search(TreeNode2_3 x, RunnerID key) {
-         if(x instanceof Leaf2_3 && !(x instanceof Sentinel)){
+    public Leaf2_3<RunnerID, Float> Search(TreeNode2_3 x, RunnerID key) {
+         if(x instanceof Leaf2_3 && ((Leaf2_3) x).getInf())
+            return null;
+         else if (x instanceof Leaf2_3 && !((Leaf2_3) x).getInf()) {
              if (!((RunnerID) x.getKey()).isSmaller(key) && !key.isSmaller(((RunnerID) x.getKey())))
-                 return x;
+                 return (Leaf2_3<RunnerID, Float>) x;
              else
                  return null;
          }
-         if((key.isSmaller((RunnerID) x.getLeft().getKey())) || (!((RunnerID) x.getLeft().getKey()).isSmaller(key) && !key.isSmaller(((RunnerID) x.getLeft().getKey()))))
+         RunnerID leftKey = ((RunnerID) x.getLeft().getKey());
+        RunnerID midKey = ((RunnerID) x.getMiddle().getKey());
+        RunnerID rightKey = ((RunnerID) x.getRight().getKey());
+         if(leftKey != null && (key.isSmaller(leftKey)) || (!leftKey.isSmaller(key) && !key.isSmaller(leftKey)))
              return Search(x.getLeft(), key);
-        else if((key.isSmaller((RunnerID) x.getMiddle().getKey())) || (!((RunnerID) x.getMiddle().getKey()).isSmaller(key) && !key.isSmaller(((RunnerID) x.getMiddle().getKey()))))
+        else if(midKey != null && (key.isSmaller(midKey)) || (!midKey.isSmaller(key) && !key.isSmaller(midKey)))
              return Search(x.getMiddle(), key);
         else
             return Search(x.getRight(), key);
