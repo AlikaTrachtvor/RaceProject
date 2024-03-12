@@ -34,16 +34,16 @@ public class Tree2_3<K,V>{
         }
         else{
             if(state == 0)
-                return (float) A.getKey() == (float) B.getKey();
+                return (double) A.getKey() == (double) B.getKey();
             else if(state == 1)
-                return (float) A.getKey() <= (float) B.getKey();
+                return (double) A.getKey() <= (double) B.getKey();
             else
-                return (float) A.getKey() < (float) B.getKey();
+                return (double) A.getKey() < (double) B.getKey();
         }
     }
-    public TreeNode2_3 Search(TreeNode2_3 x, K key){
+    public TreeNode2_3 Search(K key){
         TreeNode2_3<K,V> temp = new TreeNode2_3<>(null, key, null, null,null,null,false,false);
-        return SearchAux(x,temp);
+        return SearchAux(this.root,temp);
     }
     public TreeNode2_3 SearchAux(TreeNode2_3 x, TreeNode2_3 y){
         if (x.getNumOfChildren() == 0){
@@ -139,29 +139,29 @@ public class Tree2_3<K,V>{
     }
     public void Insert(TreeNode2_3 z){
         TreeNode2_3<K,V> y = this.root;
-        while(y.getNumOfChildren() > 0){
-            if(isSmallerOrEqual(z, y.getLeft(),-1))
+        while(y.getNumOfChildren() > 0) {
+            if (isSmallerOrEqual(z, y.getLeft(), -1))
                 y = y.getLeft();
-            else if (isSmallerOrEqual(z, y.getMiddle(),-1))
-                y = y .getMiddle();
+            else if (isSmallerOrEqual(z, y.getMiddle(), -1))
+                y = y.getMiddle();
             else
                 y = y.getRight();
-            TreeNode2_3<K,V> x = y.getParent();
-            z = Insert_And_Split(x,z);
-            while(!x.equals(root)){
-                x = x.getParent();
-                if(z != null)
-                    z = Insert_And_Split(x,z);
-                else
-                    Update_Key(x);
-            }
-            if(z!=null){
-                TreeNode2_3<K,V> w = new TreeNode2_3<>();
-                Set_Children(w,x,z,null);
-                root = w;
+        }
+        TreeNode2_3<K,V> x = y.getParent();
+        z = Insert_And_Split(x,z);
+        while(!x.equals(root)){
+            x = x.getParent();
+            if(z != null)
+                z = Insert_And_Split(x,z);
+            else
+                Update_Key(x);
+        }
+        if(z!=null){
+            TreeNode2_3<K,V> w = new TreeNode2_3<>();
+            Set_Children(w,x,z,null);
+            this.root = w;
             }
         }
-    }
     public TreeNode2_3<K,V> Borrow_And_Merge(TreeNode2_3<K,V> y) {
         TreeNode2_3<K, V> z = y.getParent();
         if (y.equals(z.getLeft())) {
@@ -169,8 +169,11 @@ public class Tree2_3<K,V>{
             if (x.getRight() != null) {
                 Set_Children(y, y.getLeft(), x.getLeft(), null);
                 Set_Children(x, x.getMiddle(), x.getRight(), null);
-            } else Set_Children(x, y.getLeft(), x.getLeft(), x.getMiddle());
-            Set_Children(z, x, z.getRight(), null);
+            }
+            else{
+                Set_Children(x, y.getLeft(), x.getLeft(), x.getMiddle());
+                Set_Children(z, x, z.getRight(), null);
+            }
             return z;
         }
         else if (y.equals(z.getMiddle())) {
@@ -178,8 +181,11 @@ public class Tree2_3<K,V>{
             if (x.getRight() != null) {
                 Set_Children(y, x.getRight(), y.getLeft(), null);
                 Set_Children(x, x.getLeft(), x.getMiddle(), null);
-            } else Set_Children(x, x.getLeft(), y.getMiddle(), y.getLeft());
-            Set_Children(z, x, z.getRight(), null);
+            }
+            else {
+                Set_Children(x, x.getLeft(), y.getMiddle(), y.getLeft());
+                Set_Children(z, x, z.getRight(), null);
+            }
             return z;
         }
         else {
@@ -187,8 +193,11 @@ public class Tree2_3<K,V>{
             if (x.getRight() != null) {
                 Set_Children(y, x.getRight(), y.getLeft(), null);
                 Set_Children(x, x.getLeft(), x.getMiddle(), null);
-            } else Set_Children(x, x.getLeft(), y.getMiddle(), y.getLeft());
-            Set_Children(z, z.getLeft(), x, null);
+            }
+            else {
+                Set_Children(x, x.getLeft(), y.getMiddle(), y.getLeft());
+                Set_Children(z, z.getLeft(), x, null);
+            }
             return z;
         }
     }
@@ -197,7 +206,7 @@ public class Tree2_3<K,V>{
         if(x.equals(y.getLeft()))
             Set_Children(y, y.getMiddle(), y.getRight(),null);
         else if (x.equals(y.getMiddle()))
-            Set_Children(y,y.getLeft(),y.getMiddle(),null);
+            Set_Children(y,y.getLeft(),y.getRight(),null);
         else
             Set_Children(y,y.getLeft(),y.getMiddle(),null);
         while (y != null){

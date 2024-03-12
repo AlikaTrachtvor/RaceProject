@@ -18,16 +18,22 @@ class RunnerIDInt extends RunnerID{
 }
 public class Main {
     public static void main(String[] args) {
-        // Press Alt+Enter with your caret at the highlighted text to see how
-        // IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        Tree2_3<RunnerIDInt, Double> tree = new Tree2_3();
+        RunnerIDInt key1 = new RunnerIDInt(100);
+        RunnerIDInt key2 = new RunnerIDInt(100);
+        TreeNode2_3<RunnerIDInt,Double> A = new TreeNode2_3(null,key1,null,null,null,5.5,false,false);
+        TreeNode2_3<Double,Double> B = new TreeNode2_3(null,500.0,null,null,null,null,false,false);
 
-        // Press Shift+F10 or click the green arrow button in the gutter to run the code.
-        for (int i = 1; i <= 5; i++) {
+        tree.Insert(A);
+        TreeNode2_3<RunnerIDInt,Double> result = tree.Search(key1);
+        System.out.println(result.getValue());
+        tree.Delete(A);
+        result = tree.Search(key1);
+        if(result == null)
+            System.out.println("deleted successfully");
+        else
+            System.out.println("something wrong");
 
-            // Press Shift+F9 to start debugging your code. We have set one breakpoint
-            // for you, but you can always add more by pressing Ctrl+F8.
-            System.out.println("i = " + i);
-        }
+
     }
 }

@@ -1,6 +1,6 @@
 public class Runner {
     private RunnerID id;
-    private B_Heap<Float> running_heat;
+    private float running_heat;
     private float sum_runtime;
 
     public Runner(RunnerID id){

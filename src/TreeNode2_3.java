@@ -22,13 +22,13 @@ public class TreeNode2_3<K, V> {
     public TreeNode2_3(TreeNode2_3 p, K k, TreeNode2_3 l, TreeNode2_3 m, TreeNode2_3 r, V value, boolean negInf, boolean posInf){
         this.parent = p;
         this.key = k;
-        if(left != null)
+        if(l != null)
             this.numOfChildren++;
         this.left = l;
-        if(middle != null)
+        if(m != null)
             this.numOfChildren++;
         this.middle = m;
-        if(right != null)
+        if(r != null)
             this.numOfChildren++;
         this.right = r;
         this.value = value;
@@ -76,6 +76,8 @@ public class TreeNode2_3<K, V> {
     public void setNumOfChildren(int numOfChildren) {
         this.numOfChildren = numOfChildren;
     }
+    public V getValue(){return this.value;}
+    public void setValue(V val){this.value = val;}
     public boolean getMinusInf() {return this.isMinusInf;}
     public void setMinusInf(boolean negInf){this.isMinusInf = negInf;}
     public void setPlusInf(boolean posInf){this.isPlusInf = posInf;}
