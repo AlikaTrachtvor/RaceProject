@@ -1,7 +1,9 @@
 public class Runner {
     private RunnerID id;
-    private float running_heat;
-    private float sum_runtime;
+    private Tree2_3<Double,Double> running_heat;
+    private double sum_runtime;
+    private int numOfRuns;
+    private double minRunTime;
 
     public Runner(RunnerID id){
         this.id = id;
