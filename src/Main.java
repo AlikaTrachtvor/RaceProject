@@ -18,21 +18,43 @@ class RunnerIDInt extends RunnerID{
 }
 public class Main {
     public static void main(String[] args) {
-        Tree2_3<RunnerIDInt, Double> tree = new Tree2_3();
+        Tree2_3<Float,RunnerIDInt, Float> tree = new Tree2_3();
+        System.out.println("the root's size: " + tree.getRoot().getSize());
         RunnerIDInt key1 = new RunnerIDInt(100);
-        RunnerIDInt key2 = new RunnerIDInt(100);
-        TreeNode2_3<RunnerIDInt,Double> A = new TreeNode2_3(null,key1,null,null,null,5.5,false,false);
-        TreeNode2_3<Double,Double> B = new TreeNode2_3(null,500.0,null,null,null,null,false,false);
-
+        RunnerIDInt key2 = new RunnerIDInt(101);
+        RunnerIDInt key3 = new RunnerIDInt(102);
+        RunnerIDInt key4 = new RunnerIDInt(103);
+        Float k1 = new Float(5.4);
+        Float k2 = new Float(6);
+        Float k3 = new Float(7);
+        TreeNode2_3<Float,RunnerIDInt,Float> A = new TreeNode2_3(null,k1, key1,null,null,null,1,false,false);
+        TreeNode2_3<Float,RunnerIDInt,Float> B = new TreeNode2_3(null,k1,key2,null,null,null,2,false,false);
+        TreeNode2_3<Float,RunnerIDInt,Float> C = new TreeNode2_3(null,k2,key3,null,null,null,3,false,false);
+        TreeNode2_3<Float,RunnerIDInt,Float> D = new TreeNode2_3(null,k3,key4,null,null,null,3,false,false);
         tree.Insert(A);
-        TreeNode2_3<RunnerIDInt,Double> result = tree.Search(key1);
-        System.out.println(result.getValue());
-        tree.Delete(A);
-        result = tree.Search(key1);
-        if(result == null)
-            System.out.println("deleted successfully");
-        else
-            System.out.println("something wrong");
+        tree.Insert(B);
+        tree.Insert(C);
+        tree.Insert(D);
+        System.out.println("The new root's size: " + tree.getRoot().getSize());
+       System.out.println(tree.findRank(A));
+        //TreeNode2_3<Float,RunnerIDInt,Float> result = tree.Search(k1,key2);
+        //if(result == null)
+           //System.out.println("A deleted successfully");
+        //else
+            //System.out.println("something wrong");
+        //TreeNode2_3<Float,RunnerIDInt,Float> min = tree.findMinimum();
+        //System.out.println(min.getValue());
+        //System.out.println(B.getParent().getParent().getPlusInf());
+        //TreeNode2_3<Float,RunnerIDInt,Float> result = tree.Search(k, key2);
+        //System.out.println(result.getValue());
+
+        //System.out.println(A.getParent().getNumOfChildren());
+        //TreeNode2_3<Float,RunnerIDInt,Float> result = tree.Search(k,key2);
+        //if(result != null)
+            //System.out.println(result.getValue());
+        //else
+            //System.out.println("something is wrong");
+
 
 
     }
