@@ -7,6 +7,9 @@ public class Race {
     private float minAvg;
     private RunnerID minAvgID;
 
+    public Race(){
+        init();
+    }
     public void init(){
         this.runners = new Tree2_3<RunnerID,RunnerID,Runner>();
         this.minTimes = new Tree2_3<Float,RunnerID,Float>();
@@ -16,6 +19,7 @@ public class Race {
         this.minTimeID = null;
         this.minAvgID = null;
     }
+    public Tree2_3<RunnerID, RunnerID, Runner> getRunners(){return this.runners;}
 
     /**
      * This method gets an id of a runner and adds it to the tree that holds the information of the runners
@@ -28,6 +32,12 @@ public class Race {
         Runner runner = new Runner(id);
         TreeNode2_3<RunnerID, RunnerID,Runner> x = new TreeNode2_3<>(null, id,null, null,null,null,runner,false,false);
         this.runners.Insert(x);
+        float minTime = runner.getMinRunTime();
+        float avgTime = runner.getAvgRunTime();
+        this.minTimes.Insert(new TreeNode2_3<>(null,minTime,id,null,null,null,null,false,false));
+        this.avgTimes.Insert(new TreeNode2_3<>(null,avgTime,id,null,null,null,null,false,false));
+        updateMinimum();
+        updateAverage();
     }
 
     private void updateMinimum(){
@@ -57,14 +67,10 @@ public class Race {
         runner.addRun(time);
         float newMinTime = runner.getMinRunTime();
         float newAvgTime = runner.getAvgRunTime();
-        TreeNode2_3<Float,RunnerID,Float> minRun = this.minTimes.Search(oldMinTime,id);
-        TreeNode2_3<Float,RunnerID,Float> avgRun = this.minTimes.Search(oldAvgTime,id);
-        this.minTimes.Delete(minRun);
-        this.avgTimes.Delete(avgRun);
-        minRun = new TreeNode2_3<>(null,newMinTime,id,null,null,null,null,false,false);
-        avgRun = minRun = new TreeNode2_3<>(null,newAvgTime,id,null,null,null,null,false,false);
-        this.minTimes.Insert(minRun);
-        this.avgTimes.Insert(avgRun);
+        this.minTimes.Delete(this.minTimes.Search(oldMinTime,id));
+        this.avgTimes.Delete(this.avgTimes.Search(oldAvgTime,id));
+        this.minTimes.Insert(new TreeNode2_3<>(null,newMinTime,id,null,null,null,null,false,false));
+        this.avgTimes.Insert(new TreeNode2_3<>(null,newAvgTime,id,null,null,null,null,false,false));
         updateMinimum();
         updateAverage();
     }
@@ -83,16 +89,12 @@ public class Race {
         float oldMinTime = runner.getMinRunTime();
         float oldAvgTime = runner.getAvgRunTime();
         runner.deleteRun(time);
+        this.minTimes.Delete(this.minTimes.Search(oldMinTime,id));
+        this.avgTimes.Delete(this.avgTimes.Search(oldAvgTime,id));
         float newMinTime = runner.getMinRunTime();
         float newAvgTime = runner.getAvgRunTime();
-        TreeNode2_3<Float,RunnerID,Float> minRun = this.minTimes.Search(oldMinTime,id);
-        TreeNode2_3<Float,RunnerID,Float> avgRun = this.minTimes.Search(oldAvgTime,id);
-        this.minTimes.Delete(minRun);
-        this.avgTimes.Delete(avgRun);
-        minRun = new TreeNode2_3<>(null,newMinTime,id,null,null,null,null,false,false);
-        avgRun = minRun = new TreeNode2_3<>(null,newAvgTime,id,null,null,null,null,false,false);
-        this.minTimes.Insert(minRun);
-        this.avgTimes.Insert(avgRun);
+        this.minTimes.Insert(new TreeNode2_3<>(null,newMinTime,id,null,null,null,null,false,false));
+        this.avgTimes.Insert(new TreeNode2_3<>(null,newAvgTime,id,null,null,null,null,false,false));
         updateMinimum();
         updateAverage();
     }
@@ -110,14 +112,10 @@ public class Race {
         float minRunTime = runner.getMinRunTime();
         float avgRunTime = runner.getAvgRunTime();
         this.runners.Delete(temp);
-        TreeNode2_3 minRun = this.minTimes.Search(minRunTime,id);
-        if(minRun != null){
-            TreeNode2_3 avgRun = this.avgTimes.Search(avgRunTime,id);
-            this.minTimes.Delete(minRun);
-            this.avgTimes.Delete(avgRun);
-            updateMinimum();
-            updateAverage();
-        }
+        this.minTimes.Delete(this.minTimes.Search(minRunTime,id));
+        this.avgTimes.Delete(this.avgTimes.Search(avgRunTime,id));
+        updateMinimum();
+        updateAverage();
     }
     /**
      * This method finds the min runtime of a runner
@@ -127,8 +125,6 @@ public class Race {
     public float getMinRun(RunnerID id){
         TreeNode2_3 temp = this.runners.Search(id,null);
         if(temp == null)
-            throw new IllegalArgumentException();
-        if(((Runner) temp.getValue()).getNumOfRuns() == 0)
             throw new IllegalArgumentException();
         float min = ((Runner) temp.getValue()).getMinRunTime();
         return min;
@@ -141,8 +137,6 @@ public class Race {
     public float getAvgRun(RunnerID id){
         TreeNode2_3 temp = this.runners.Search(id,null);
         if(temp == null)
-            throw new IllegalArgumentException();
-        if(((Runner) temp.getValue()).getNumOfRuns() == 0)
             throw new IllegalArgumentException();
         float avg = ((Runner) temp.getValue()).getAvgRunTime();
         return avg;
@@ -162,8 +156,6 @@ public class Race {
         TreeNode2_3 temp1 = this.runners.Search(id, null);
         if(temp1 == null)
             throw new IllegalArgumentException();
-        if(((Runner) temp1.getValue()).getNumOfRuns() == 0)
-            throw new IllegalArgumentException();
         float avgRun = ((Runner) temp1.getValue()).getAvgRunTime();
         TreeNode2_3 temp2 = this.avgTimes.Search(avgRun, id);
         return this.avgTimes.findRank(temp2);
@@ -172,8 +164,6 @@ public class Race {
     public int getRankMin(RunnerID id){
         TreeNode2_3 temp1 = this.runners.Search(id, null);
         if(temp1 == null)
-            throw new IllegalArgumentException();
-        if(((Runner) temp1.getValue()).getNumOfRuns() == 0)
             throw new IllegalArgumentException();
         float minRun = ((Runner) temp1.getValue()).getMinRunTime();
         TreeNode2_3 temp2 = this.minTimes.Search(minRun, id);

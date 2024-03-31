@@ -28,10 +28,17 @@ public class Runner {
             throw new IllegalArgumentException();
         TreeNode2_3<Float,Float,Float> new_heat = new TreeNode2_3<Float,Float,Float>(null,time,null,null,null,null,null,false,false);
         this.running_heat.Insert(new_heat);
-        this.avgRunTime = ((this.numOfRuns*avgRunTime)+((float) temp.getKey()))/(this.numOfRuns + 1);
-        this.numOfRuns++;
-        TreeNode2_3<Float, Float,Float> min = this.running_heat.findMinimum();
-        this.minRunTime = (float) min.getKey();
+        if(numOfRuns == 0){
+            this.numOfRuns++;
+            this.avgRunTime = time;
+            this.minRunTime = time;
+        }
+        else{
+            this.avgRunTime = ((this.numOfRuns*avgRunTime)+time)/(this.numOfRuns + 1);
+            this.numOfRuns++;
+            if(time < this.minRunTime)
+                this.minRunTime = time;
+        }
     }
 
     /**
@@ -43,10 +50,17 @@ public class Runner {
         TreeNode2_3<Float, Float,Float> temp = this.running_heat.Search(time,null);
         if(temp == null)
             throw new IllegalArgumentException();
-        this.avgRunTime = ((this.numOfRuns*avgRunTime)-((float) temp.getKey()))/(this.numOfRuns - 1);
-        this.numOfRuns--;
-        this.running_heat.Delete(temp);
-        TreeNode2_3<Float, Float,Float> min = this.running_heat.findMinimum();
-        this.minRunTime = (float) min.getKey();
+        if(this.numOfRuns == 1){
+            this.minRunTime = Float.MAX_VALUE;
+            this.avgRunTime = Float.MAX_VALUE;
+            this.numOfRuns--;
+        }
+        else{
+            this.avgRunTime = ((this.numOfRuns*avgRunTime)-time)/(this.numOfRuns - 1);
+            this.numOfRuns--;
+            this.running_heat.Delete(temp);
+            TreeNode2_3<Float, Float,Float> min = this.running_heat.findMinimum();
+            this.minRunTime = (float) min.getKey();
+        }
     }
 }
