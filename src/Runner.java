@@ -22,7 +22,14 @@ public class Runner {
     public float getAvgRunTime(){return this.avgRunTime;}
     public int getNumOfRuns(){return this.numOfRuns;}
 
+    /**
+     * This method adds a run with  give time to the record of the runner's runs
+     * @param time the time of the new run
+     * @throws IllegalArgumentException if time has illegal value (0 or negative) or this run already exists
+     */
     public void addRun(float time){
+        if(time <= 0)
+            throw new IllegalArgumentException();
         TreeNode2_3<Float, Float,Float> temp = this.running_heat.Search(time,null);
         if(temp != null)
             throw new IllegalArgumentException();
@@ -50,6 +57,7 @@ public class Runner {
         TreeNode2_3<Float, Float,Float> temp = this.running_heat.Search(time,null);
         if(temp == null)
             throw new IllegalArgumentException();
+        this.running_heat.Delete(temp);
         if(this.numOfRuns == 1){
             this.minRunTime = Float.MAX_VALUE;
             this.avgRunTime = Float.MAX_VALUE;
@@ -58,7 +66,6 @@ public class Runner {
         else{
             this.avgRunTime = ((this.numOfRuns*avgRunTime)-time)/(this.numOfRuns - 1);
             this.numOfRuns--;
-            this.running_heat.Delete(temp);
             TreeNode2_3<Float, Float,Float> min = this.running_heat.findMinimum();
             this.minRunTime = (float) min.getKey();
         }

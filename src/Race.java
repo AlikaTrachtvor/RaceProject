@@ -14,8 +14,8 @@ public class Race {
         this.runners = new Tree2_3<RunnerID,RunnerID,Runner>();
         this.minTimes = new Tree2_3<Float,RunnerID,Float>();
         this.avgTimes = new Tree2_3<Float,RunnerID,Float>();
-        this.minTime = 0;
-        this.minAvg = 0;
+        this.minTime = Float.MAX_VALUE;
+        this.minAvg = Float.MAX_VALUE;
         this.minTimeID = null;
         this.minAvgID = null;
     }
@@ -32,23 +32,39 @@ public class Race {
         Runner runner = new Runner(id);
         TreeNode2_3<RunnerID, RunnerID,Runner> x = new TreeNode2_3<>(null, id,null, null,null,null,runner,false,false);
         this.runners.Insert(x);
-        float minTime = runner.getMinRunTime();
-        float avgTime = runner.getAvgRunTime();
-        this.minTimes.Insert(new TreeNode2_3<>(null,minTime,id,null,null,null,null,false,false));
-        this.avgTimes.Insert(new TreeNode2_3<>(null,avgTime,id,null,null,null,null,false,false));
-        updateMinimum();
-        updateAverage();
+        this.minTimes.Insert(new TreeNode2_3<>(null,Float.MAX_VALUE,id,null,null,null,null,false,false));
+        this.avgTimes.Insert(new TreeNode2_3<>(null,Float.MAX_VALUE,id,null,null,null,null,false,false));
+        //updateMinimum();
+        //updateAverage();
     }
 
     private void updateMinimum(){
         TreeNode2_3<Float,RunnerID,Float> minRun = this.minTimes.findMinimum();
-        this.minTime = (float) minRun.getKey();
-        this.minTimeID = (RunnerID) minRun.getSubKey();
+        if(minRun == null){
+            this.minTime = Float.MAX_VALUE;
+            this.minTimeID = null;
+        }
+        else {
+            this.minTime = (float) minRun.getKey();
+            if (this.minTime == Float.MAX_VALUE)
+                this.minTimeID = null;
+            else
+                this.minTimeID = (RunnerID) minRun.getSubKey();
+        }
     }
     private void updateAverage(){
         TreeNode2_3<Float,RunnerID,Float> avgRun = this.avgTimes.findMinimum();
-        this.minAvg = (float) avgRun.getKey();
-        this.minAvgID = (RunnerID) avgRun.getSubKey();
+        if(avgRun == null){
+            this.minAvg = Float.MAX_VALUE;
+            this.minAvgID = null;
+        }
+        else{
+            this.minAvg = (float) avgRun.getKey();
+            if(this.minAvg == Float.MAX_VALUE)
+                this.minAvgID = null;
+            else
+                this.minAvgID = (RunnerID) avgRun.getSubKey();
+        }
     }
 
     /**
@@ -127,6 +143,8 @@ public class Race {
         if(temp == null)
             throw new IllegalArgumentException();
         float min = ((Runner) temp.getValue()).getMinRunTime();
+        if (min == Float.MAX_VALUE)
+            throw new IllegalArgumentException();
         return min;
     }
     /**
@@ -139,12 +157,32 @@ public class Race {
         if(temp == null)
             throw new IllegalArgumentException();
         float avg = ((Runner) temp.getValue()).getAvgRunTime();
+        if(avg == Float.MAX_VALUE)
+            throw new IllegalArgumentException();
         return avg;
     }
 
-    public RunnerID getFastestRunnerAvg(){return this.minAvgID;}
+    /**
+     * This method finds the id of the runner with the minimal average runtime
+     * @throws IllegalArgumentException if there aren't any runs
+     * @return the id of the runner with the minimal average runtime
+     */
+    public RunnerID getFastestRunnerAvg(){
+        if(this.minAvgID == null)
+            throw new IllegalArgumentException();
+        return this.minAvgID;
+    }
 
-    public RunnerID getFastestRunnerMin(){return this.minTimeID;}
+    /**
+     * This method finds the id of the runner with the smallest runtime
+     * @throws IllegalArgumentException if there aren't any runs
+     * @return the id of the runner with the smallest runtime
+     */
+    public RunnerID getFastestRunnerMin(){
+        if(this.minTimeID == null)
+            throw new IllegalArgumentException();
+        return this.minTimeID;
+    }
 
     /**
      * This method finds the rank of a runner based on his average runtime
@@ -157,6 +195,8 @@ public class Race {
         if(temp1 == null)
             throw new IllegalArgumentException();
         float avgRun = ((Runner) temp1.getValue()).getAvgRunTime();
+        if(avgRun == Float.MAX_VALUE)
+            throw new IllegalArgumentException();
         TreeNode2_3 temp2 = this.avgTimes.Search(avgRun, id);
         return this.avgTimes.findRank(temp2);
     }
@@ -166,6 +206,8 @@ public class Race {
         if(temp1 == null)
             throw new IllegalArgumentException();
         float minRun = ((Runner) temp1.getValue()).getMinRunTime();
+        if(minRun == Float.MAX_VALUE)
+            throw new IllegalArgumentException();
         TreeNode2_3 temp2 = this.minTimes.Search(minRun, id);
         return this.minTimes.findRank(temp2);
     }
